@@ -1,3 +1,35 @@
+"""Train and use the Canadian coin denomination classifier.
+
+Training uses YOLO bounding boxes. Run python coin_classifier.py --help.
+For integration, pass the original BGR image and detector boxes to classify_coins.
+"""
+
+import argparse
+from pathlib import Path
+
+import cv2
+import joblib
+import numpy as np
+from skimage.feature import local_binary_pattern
+from sklearn.metrics import f1_score
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+
+
+COIN_NAMES = ("nickel", "dime", "quarter", "loonie", "toonie")
+PILOT_CLASSES = ("dime", "nickel", "quarter", "loonie", "toonie")
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+CROP_SIZE = 64
+rows, columns = np.ogrid[:CROP_SIZE, :CROP_SIZE]
+COIN_MASK = (rows - 31.5) ** 2 + (columns - 31.5) ** 2 <= 28 ** 2
+
+
+def extract_features(coin_crop):
+    """Return colour and texture features for one BGR coin crop."""
+    resized = cv2.resize(coin_crop, (CROP_SIZE, CROP_SIZE), interpolation=cv2.INTER_AREA)
+    hsv = cv2.cvtColor(resized, cv2.COLOR_BGR2HSV)
+    gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
     texture = local_binary_pattern(gray, P=8, R=1, method="uniform")
 
     histograms = [
@@ -123,4 +155,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
