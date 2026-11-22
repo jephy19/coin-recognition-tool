@@ -1,8 +1,6 @@
-
 """Detect individual coins using contour detection."""
 
 import cv2
-
 from preprocessing import convert_to_grayscale, apply_gaussian_blur
 
 
@@ -13,6 +11,7 @@ def detect_coins_contour(
     min_ratio=0.65,
     max_ratio=1.35
 ):
+    
     """
     Detect coins using contours.
 
@@ -25,10 +24,8 @@ def detect_coins_contour(
 
     # Step 1: Convert to grayscale
     gray = convert_to_grayscale(image)
-
     # Step 2: Apply Gaussian blur
     blurred = apply_gaussian_blur(gray)
-
     # Step 3: Apply Otsu thresholding
     _, binary = cv2.threshold(
         blurred,
@@ -61,19 +58,16 @@ def detect_coins_contour(
     for contour in contours:
 
         area = cv2.contourArea(contour)
-
+        
         # Filter very small contours
         if area < min_area:
             continue
-
         perimeter = cv2.arcLength(contour, True)
-
         if perimeter == 0:
             continue
-
+            
         # Calculate circularity
         circularity = (4 * 3.14159 * area) / (perimeter ** 2)
-
         if circularity < min_circularity:
             continue
 
@@ -85,7 +79,6 @@ def detect_coins_contour(
 
         if not min_ratio <= ratio <= max_ratio:
             continue
-
         boxes.append((x, y, x + w, y + h))
 
     # Sort boxes from left to right
