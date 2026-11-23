@@ -2,7 +2,7 @@
 What this file does:
     1. Gives each recognized coin its dollar value
     2. Adds up the total value of all coins
-    3. Writes the results onto the image so we can see them
+    3. Writes the results onto the image so can see them
 """
 import cv2
 
@@ -34,7 +34,7 @@ def calculate_total(labels):
     # Start with a count of zero for every kind of coin
     breakdown = {"nickel": 0, "dime": 0, "quarter": 0, "loonie": 0, "toonie": 0}
 
-    total_cents = 0   # we add in CENTS (whole numbers) to avoid rounding errors
+    total_cents = 0   # add in CENTS (whole numbers) to avoid rounding errors
 
     for label in labels:
         label = label.lower()
@@ -72,7 +72,7 @@ def draw_results(image, coins, total):
             label  = the coin's name, e.g. "dime"
     total : the total value in dollars
     """
-    result = image.copy()         # copy so we don't change the original picture
+    result = image.copy()         # copy so don't need to change the original picture
 
     # Colours in OpenCV are (Blue, Green, Red), NOT (Red, Green, Blue)
     GREEN = (0, 255, 0)
